@@ -6,11 +6,13 @@ import { NdaFormValues, PartyDetails } from '@/types/nda';
 import ProgressBar from '@/components/ProgressBar';
 import FormField from '@/components/FormField';
 import RadioOption from '@/components/RadioOption';
+import { SESSION_KEY } from '@/lib/constants';
 
-export const SESSION_KEY = 'ndaFormValues';
 const TOTAL_STEPS = 4;
 
-const todayStr = () => new Date().toISOString().split('T')[0];
+function todayStr(): string {
+  return new Date().toISOString().split('T')[0];
+}
 
 const DEFAULT_PARTY: PartyDetails = {
   company: '',
@@ -43,6 +45,15 @@ export function validateStep(step: number, values: NdaFormValues): Errors {
     }
     if (!values.effectiveDate) {
       errors.effectiveDate = 'Effective Date is required.';
+    }
+  }
+
+  if (step === 2) {
+    if (values.mndaTerm.type === 'fixed' && values.mndaTerm.years < 1) {
+      errors.mndaYears = 'MNDA term must be at least 1 year.';
+    }
+    if (values.termOfConfidentiality.type === 'fixed' && values.termOfConfidentiality.years < 1) {
+      errors.confidYears = 'Confidentiality term must be at least 1 year.';
     }
   }
 
@@ -115,13 +126,10 @@ export default function WizardPage() {
   const updateParty = (party: 'party1' | 'party2', field: keyof PartyDetails, value: string) =>
     setFormValues((prev) => ({ ...prev, [party]: { ...prev[party], [field]: value } }));
 
-  const mndaYears =
-    formValues.mndaTerm.type === 'fixed' ? (formValues.mndaTerm as { type: 'fixed'; years: number }).years : 1;
+  const mndaYears = formValues.mndaTerm.type === 'fixed' ? formValues.mndaTerm.years : 1;
 
   const confidYears =
-    formValues.termOfConfidentiality.type === 'fixed'
-      ? (formValues.termOfConfidentiality as { type: 'fixed'; years: number }).years
-      : 1;
+    formValues.termOfConfidentiality.type === 'fixed' ? formValues.termOfConfidentiality.years : 1;
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
@@ -186,9 +194,11 @@ export default function WizardPage() {
                         max={10}
                         className="w-16 border border-gray-300 rounded p-1 text-sm"
                         value={mndaYears}
-                        onChange={(e) =>
-                          update('mndaTerm', { type: 'fixed', years: Number(e.target.value) })
-                        }
+                        onChange={(e) => {
+                          const parsed = parseInt(e.target.value, 10);
+                          if (!isNaN(parsed) && parsed > 0)
+                            update('mndaTerm', { type: 'fixed', years: parsed });
+                        }}
                         aria-label="MNDA term years"
                       />
                       <span>year(s) from Effective Date</span>
@@ -220,14 +230,14 @@ export default function WizardPage() {
                       <input
                         type="number"
                         min={1}
+                        max={99}
                         className="w-16 border border-gray-300 rounded p-1 text-sm"
                         value={confidYears}
-                        onChange={(e) =>
-                          update('termOfConfidentiality', {
-                            type: 'fixed',
-                            years: Number(e.target.value),
-                          })
-                        }
+                        onChange={(e) => {
+                          const parsed = parseInt(e.target.value, 10);
+                          if (!isNaN(parsed) && parsed > 0)
+                            update('termOfConfidentiality', { type: 'fixed', years: parsed });
+                        }}
                         aria-label="Confidentiality term years"
                       />
                       <span>year(s) from Effective Date</span>
@@ -301,15 +311,13 @@ export default function WizardPage() {
                 {(['party1', 'party2'] as const).map((party, idx) => (
                   <div key={party}>
                     <h3 className="text-base font-semibold text-gray-800 mb-4">Party {idx + 1}</h3>
-                    {(
-                      [
+                    {([
                         { field: 'company', label: 'Company', type: 'text' },
                         { field: 'signatoryName', label: 'Signatory Name', type: 'text' },
                         { field: 'title', label: 'Title', type: 'text' },
                         { field: 'noticeAddress', label: 'Notice Address', type: 'textarea' },
                         { field: 'signatureDate', label: 'Signature Date', type: 'date' },
-                      ] as { field: keyof PartyDetails; label: string; type: string }[]
-                    ).map(({ field, label, type }) => (
+                      ] satisfies { field: keyof PartyDetails; label: string; type: string }[]).map(({ field, label, type }) => (
                       <FormField
                         key={field}
                         label={label}

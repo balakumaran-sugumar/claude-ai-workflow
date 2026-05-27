@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">97.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>35/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
@@ -151,7 +151,24 @@
 <a name='L86'></a><a href='#L86'>86</a>
 <a name='L87'></a><a href='#L87'>87</a>
 <a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -165,8 +182,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">30x</span>
@@ -178,6 +209,9 @@
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -253,8 +287,22 @@ import { downloadMarkdown, buildDownloadFilename } from '@/lib/downloadMarkdown'
 import CoverpageSection from '@/components/CoverpageSection';
 import StandardTerms from '@/components/StandardTerms';
 import ActionBar from '@/components/ActionBar';
+import { SESSION_KEY } from '@/lib/constants';
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >SESSION_KEY </span>= 'ndaFormValues';
+function isValidNdaShape(obj: unknown): boolean {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!obj || typeof obj !== 'object') <span class="cstat-no" title="statement not covered" >return false;</span>
+  const v = obj as Record&lt;string, unknown&gt;;
+  return (
+    typeof v.purpose === 'string' &amp;&amp;
+    typeof v.effectiveDate === 'string' &amp;&amp;
+    typeof v.governingLaw === 'string' &amp;&amp;
+    typeof v.jurisdiction === 'string' &amp;&amp;
+    v.mndaTerm != null &amp;&amp; typeof v.mndaTerm === 'object' &amp;&amp;
+    v.termOfConfidentiality != null &amp;&amp; typeof v.termOfConfidentiality === 'object' &amp;&amp;
+    v.party1 != null &amp;&amp; typeof v.party1 === 'object' &amp;&amp;
+    v.party2 != null &amp;&amp; typeof v.party2 === 'object'
+  );
+}
 &nbsp;
 export default function PreviewPage() {
   const router = useRouter();
@@ -265,7 +313,10 @@ export default function PreviewPage() {
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
       if (raw) {
-        setFormValues(JSON.parse(raw) as NdaFormValues);
+        const parsed = JSON.parse(raw);
+        if (isValidNdaShape(parsed)) {
+          setFormValues(parsed as NdaFormValues);
+        }
       }
     } catch {
       // malformed JSON — leave formValues null
@@ -334,7 +385,7 @@ export default function PreviewPage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-26T01:24:16.496Z
+                at 2026-05-26T02:09:49.858Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

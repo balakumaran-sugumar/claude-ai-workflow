@@ -15,8 +15,7 @@ jest.mock('@/lib/downloadMarkdown', () => ({
 
 import PreviewPage from '@/app/nda/preview/page';
 import { downloadMarkdown } from '@/lib/downloadMarkdown';
-
-const SESSION_KEY = 'ndaFormValues';
+import { SESSION_KEY } from '@/lib/constants';
 
 const MOCK_VALUES = {
   purpose: 'Evaluating a potential partnership.',

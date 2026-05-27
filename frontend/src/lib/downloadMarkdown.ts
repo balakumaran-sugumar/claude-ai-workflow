@@ -1,6 +1,6 @@
 export function buildDownloadFilename(company1: string, company2: string): string {
   const normalize = (s: string) =>
-    s.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    s.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-');
   return `mutual-nda-${normalize(company1)}-${normalize(company2)}.md`;
 }
 

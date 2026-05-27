@@ -1,31 +1,29 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
-const mockPush = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: mockPush }),
-}));
+jest.mock('next/link', () => {
+  const MockLink = ({ href, children, ...props }: { href: string; children: React.ReactNode }) => (
+    <a href={href} {...props}>{children}</a>
+  );
+  MockLink.displayName = 'Link';
+  return MockLink;
+});
 
 import LandingPage from '@/app/page';
 
 describe('LandingPage', () => {
-  beforeEach(() => {
-    mockPush.mockClear();
-  });
-
   it('renders the main heading', () => {
     render(<LandingPage />);
     expect(screen.getByRole('heading', { name: /mutual nda generator/i })).toBeInTheDocument();
   });
 
-  it('renders the Create NDA button', () => {
+  it('renders the Create NDA link', () => {
     render(<LandingPage />);
-    expect(screen.getByRole('button', { name: /create nda/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /create nda/i })).toBeInTheDocument();
   });
 
-  it('navigates to /nda/new when Create NDA is clicked', () => {
+  it('Create NDA link points to /nda/new', () => {
     render(<LandingPage />);
-    fireEvent.click(screen.getByRole('button', { name: /create nda/i }));
-    expect(mockPush).toHaveBeenCalledWith('/nda/new');
+    expect(screen.getByRole('link', { name: /create nda/i })).toHaveAttribute('href', '/nda/new');
   });
 
   it('renders the description paragraph', () => {

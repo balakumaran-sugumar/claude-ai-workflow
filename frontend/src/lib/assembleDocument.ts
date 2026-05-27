@@ -1,5 +1,14 @@
 import { NdaFormValues } from '@/types/nda';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export const STANDARD_TERMS_RAW = `# Standard Terms
 
 1. **Introduction**. This Mutual Non-Disclosure Agreement (which incorporates these Standard Terms and the Cover Page (defined below)) ("**MNDA**") allows each party ("**Disclosing Party**") to disclose or make available information in connection with the <span class="coverpage_link">Purpose</span> which (1) the Disclosing Party identifies to the receiving party ("**Receiving Party**") as "confidential", "proprietary", or the like or (2) should be reasonably understood as confidential or proprietary due to its nature and the circumstances of its disclosure ("**Confidential Information**"). Each party's Confidential Information also includes the existence and status of the parties' discussions and information on the Cover Page. Confidential Information includes technical or business information, product designs or roadmaps, requirements, pricing, security and compliance documentation, technology, inventions and know-how. To use this MNDA, the parties must complete and sign a cover page incorporating these Standard Terms ("**Cover Page**"). Each party is identified on the Cover Page and capitalized terms have the meanings given herein or on the Cover Page.
@@ -115,7 +124,7 @@ export function assembleStandardTerms(values: NdaFormValues, forPreview: boolean
   for (const [field, value] of Object.entries(fieldValues)) {
     const escaped = field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`<span class="coverpage_link">${escaped}</span>`, 'g');
-    const replacement = forPreview ? `<mark class="nda-chip">${value}</mark>` : value;
+    const replacement = forPreview ? `<mark class="nda-chip">${escapeHtml(value)}</mark>` : value;
     result = result.replace(regex, replacement);
   }
 

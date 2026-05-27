@@ -10,7 +10,7 @@ describe('buildDownloadFilename', () => {
   });
 
   it('strips special characters', () => {
-    expect(buildDownloadFilename('Foo & Bar!', 'Baz (Co.)')).toBe('mutual-nda-foo--bar-baz-co.md');
+    expect(buildDownloadFilename('Foo & Bar!', 'Baz (Co.)')).toBe('mutual-nda-foo-bar-baz-co.md');
   });
 
   it('handles empty strings', () => {

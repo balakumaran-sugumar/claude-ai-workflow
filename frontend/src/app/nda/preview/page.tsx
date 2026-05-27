@@ -12,8 +12,22 @@ import { downloadMarkdown, buildDownloadFilename } from '@/lib/downloadMarkdown'
 import CoverpageSection from '@/components/CoverpageSection';
 import StandardTerms from '@/components/StandardTerms';
 import ActionBar from '@/components/ActionBar';
+import { SESSION_KEY } from '@/lib/constants';
 
-export const SESSION_KEY = 'ndaFormValues';
+function isValidNdaShape(obj: unknown): boolean {
+  if (!obj || typeof obj !== 'object') return false;
+  const v = obj as Record<string, unknown>;
+  return (
+    typeof v.purpose === 'string' &&
+    typeof v.effectiveDate === 'string' &&
+    typeof v.governingLaw === 'string' &&
+    typeof v.jurisdiction === 'string' &&
+    v.mndaTerm != null && typeof v.mndaTerm === 'object' &&
+    v.termOfConfidentiality != null && typeof v.termOfConfidentiality === 'object' &&
+    v.party1 != null && typeof v.party1 === 'object' &&
+    v.party2 != null && typeof v.party2 === 'object'
+  );
+}
 
 export default function PreviewPage() {
   const router = useRouter();
@@ -24,7 +38,10 @@ export default function PreviewPage() {
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
       if (raw) {
-        setFormValues(JSON.parse(raw) as NdaFormValues);
+        const parsed = JSON.parse(raw);
+        if (isValidNdaShape(parsed)) {
+          setFormValues(parsed as NdaFormValues);
+        }
       }
     } catch {
       // malformed JSON — leave formValues null
